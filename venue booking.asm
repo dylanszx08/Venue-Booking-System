@@ -48,6 +48,7 @@
 	SM1_GETHOUR DB "Enter duration (1-9 hours): $"
 	SM1_CHOICE DB ?
 	SM1_HOUR DB ?
+	INVALID_HOURS DB "INVALID HOURS! ENTER A NUMBER FROM 1-9$"
 	
 	;CALCULATIONS
 	BASE_RATE DB ?
@@ -76,6 +77,8 @@
             DB "Book 5+ hours  ->  RM 20 off",10,13
             DB "All bookings   ->  RM 20 tax added",10,13
             DB 10,13, "PRESS ANY KEY TO RETURN TO THE MAIN MENU...$"
+	;SUB MENU 3
+	sm3_confirmation DB "Are you sure you want to exit(Y/N): $"
 	
 .CODE
 MAIN PROC
@@ -214,6 +217,14 @@ continue_passcheck:
 	INC SI
 	INC DI
 	LOOP num_check
+	
+	MOV AH,09H
+	LEA DX,NL
+	INT 21H
+	
+	MOV AH,09H
+	LEA DX,SUCCESS
+	INT 21H
 	
 	MOV AH,09H
 	LEA DX,NL
@@ -380,6 +391,25 @@ sm1_next2:
 	SUB AL,30H
 	MOV SM1_HOUR,AL
 	
+	;CHECK IF HOUR IS CORRECT
+	CMP SM1_HOUR,1
+	JB ifInvalidHour
+	CMP SM1_HOUR,9
+	JA ifInvalidHour
+	JMP validHour
+	
+ifInvalidHour:
+	MOV AH,09H
+	LEA DX,INVALID_HOURS
+	INT 21H
+	
+	MOV AH,09H
+	LEA DX,NL
+	INT 21H
+	
+	JMP sm1_next2
+	
+validHour:
 	;CHECKING CHOICE
 	CMP SM1_CHOICE,1
 	JE ifSeminar
@@ -540,8 +570,24 @@ ifOpt2:
 	
 	JMP main_menu                  
 ifOpt3:
-	JMP finish
+	MOV AH,09H
+	LEA DX,sm3_confirmation
+	INT 21H
+	
+	MOV AH,01H
+	INT 21H
+	
+	MOV AH,09H
+	LEA DX,NL
+	INT 21H
+	
+	CMP AL,'Y'
+	JE finish
+	CMP AL,'y'
+	JE finish
+	JMP main_menu  
 
+	JMP finish
 finish:
 	MOV AX,4C00H
 	INT 21H
