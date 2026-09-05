@@ -457,14 +457,13 @@ taxCalculation:
 
     MOV AL,BASE_RATE
     MOV AH,0
-    MOV CX,0
+    MOV CX,4
 p_rate_loop:
     MOV DX,0
     DIV TEN
     PUSH DX
-    INC CX
-    CMP AX,0
-    JNE p_rate_loop
+    LOOP p_rate_loop
+    MOV CX,4
 p_rate_digits:
     POP DX
     ADD DL,30H
@@ -489,14 +488,13 @@ p_rate_digits:
 
     MOV AL,DISCOUNT
     MOV AH,0
-    MOV CX,0
+    MOV CX,4
 p_disc_loop:
     MOV DX,0
     DIV TEN
     PUSH DX
-    INC CX
-    CMP AX,0
-    JNE p_disc_loop
+    LOOP p_disc_loop
+	MOV CX,4
 p_disc_digits:
     POP DX
     ADD DL,30H
@@ -510,14 +508,13 @@ p_disc_digits:
     INT 21H
 
     MOV AX,TOTAL_COST
-    MOV CX,0
+    MOV CX,4
 p_tot_loop:
     MOV DX,0
     DIV TEN
     PUSH DX
-    INC CX
-    CMP AX,0
-    JNE p_tot_loop
+    LOOP p_tot_loop
+	MOV CX,4
 p_tot_digits:
     POP DX
     ADD DL,30H
@@ -535,14 +532,13 @@ p_tot_digits:
     MOV BL,SM1_HOUR
 	MOV DX,0
 	DIV BX 
-    MOV CX,0
+    MOV CX,4
 p_avg_loop:
     MOV DX,0
     DIV TEN
     PUSH DX
-    INC CX
-    CMP AX,0
-    JNE p_avg_loop
+    LOOP p_avg_loop
+	MOV CX,4
 p_avg_digits:
     POP DX
     ADD DL,30H
