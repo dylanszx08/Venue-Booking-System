@@ -74,7 +74,7 @@
             DB "3. Auditorium      RM 150/hr",10,13
             DB 10,13
             DB "--- PACKAGE DEALS ---",10,13
-            DB "Book 5+ hours  ->  RM 20 off",10,13
+            DB "Book 6+ hours  ->  RM 20 off",10,13
             DB "All bookings   ->  RM 20 tax added",10,13
             DB 10,13, "PRESS ANY KEY TO RETURN TO THE MAIN MENU...$"
 	;SUB MENU 3
@@ -233,7 +233,7 @@ continue_passcheck:
 	;MAIN MENU
 main_menu:
 	MOV AH,09H
-	LEA DX,DASH
+	LEA DX,DASH 
 	INT 21H
 	
 	MOV AH,09H
@@ -583,7 +583,6 @@ ifOpt3:
 	JE finish
 	JMP main_menu  
 
-	JMP finish
 finish:
 	MOV AX,4C00H
 	INT 21H
